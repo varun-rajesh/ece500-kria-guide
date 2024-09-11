@@ -81,11 +81,9 @@ You should expect to see something like this:
 
 ![BD Step 1](images/bd_step1.png)
 
-Double click on the Zync UltraScale+ MPSoC IP block, then navigate to the `PS-PL Configuration` tab. Uncheck the two full power master AXI interfaces and only enable the low power master AXI interface.
+Double click on the Zync UltraScale+ MPSoC IP block, then navigate to the `PS-PL Configuration` tab. Uncheck the two full power master AXI interfaces and only enable the low power master AXI interface. `PS` means `Processing System` which refers to the ARM core, while `PL` means `Programmable Logic` which refers to the FPGA portion of the die. 
 
-![BD Step 2](images/bd_step2.png)
-
-Notice how now the `M_AXI_HPM0_LPD` interface is the only AXI interface on the MPSoC.
+![BD Step 2a](images/bd_step2a.png)
 
 Now add a `Clocking Wizard` IP component. Double click it and navigate to the `Output Clocks` tab. Enable `clk_out1`, `clk_out2`, and `clk_out3` and set the frequencies to `100 MHz`, `200 MHz`, and `400 MHz`, respectively. 
 
@@ -136,6 +134,122 @@ Then, in the `Interrupt` tab, enable `intr` under the `AXI Interrupt Controller`
 
 ![BD Step 13](images/bd_step13.png)
 
+Double click again on the MPSoC. Then navigate to the `I/O Configuration` tab and verify that the `Low Speed/Memory Interfaces/QSPI` settings look like below.
 
+![BD Step 2b](images/bd_step2b.png)
 
+Likewise for `Low Speed/Memory Interfaces/I2C`. `MIO` pins are pins that are directly connected from the `PS` to the package IO, while EMIO pins go between the `PS` and `PL`.  
 
+![BD Step 2c](images/bd_step2c.png)
+
+Verify these settings for the `PMU`(Platform Management Unit)
+
+![BD Step 2d](images/bd_step2d.png)
+
+For the sake of brevity, I'm going to just list out the rest of the settings.
+- Under Low Speed
+    - Under I/O Peripherals
+        - Verify SPI 1 is enabled on MIO 6-11
+        - Verify UART 1 is enabled on MIO 36-37
+        - Verify GPIO 0 is enabled on MIO 0-25
+        - Verify GPIO 1 is enabled on MIO 26-51
+    - Under Processing Unit
+        - Verify SWDT 0 is enabled
+        - Verify SWDT 1 is enabled
+        - Verify all 4 TTC0-3 is enabled
+        - Connect TTC0 Waveout to EMIO (this will be used for fan PWM control)
+- Under High Speed
+    - Under GEM (these are the RJ45 connectors on the carrier board)
+        - Verify GEM 0 is enabled on GT Lane 0
+        - Verify GEM 1 is enabled on MIO 38-49 with its MDIO on 50-51
+    - Under USB
+        - Verify USB 0 is enabled with USB 0 set to MIO 52-63 and USB 3.0 to GT Lane2
+        - Verify USB 1 is enabled with USB 1 set to MIO 64-75 and USB 3.0 to GT Lane3
+        - Verify USB 0 and USB 1 reset is set to `Active Low` connected to MIO 76 and MIO 77, respectively
+    - Under Display Port
+        - Verify Display Port is enabled
+        - Verify DPAUX is connected to MIO 27-30
+        - Verify Lane Selection is Single Lower
+
+Finally, navigate back to `PS-PL Configuration/General/Fabric Reset Enable/Number of Fabric Resets` and set this from 1 to 4. 
+
+Exit out of the configuration. In the main block design view, click on the `Validate Design` button, after a few seconds, the design will be validated. It is expected to receive a critical warning about the `intr` pin, however this is something that will be automagically handled by the v++ linker later. 
+
+![BD Step 14](images/bd_step14.png)
+
+Finally, we have one more thing to add for the fan control. The output of the `TTC0` is 3 bits, we only need one of those bits to control the fan pwm. We use the MSB of the output. 
+
+Add a `Slice` IP block and configure it so that:
+- Din Width is 3
+- Din From is 2
+- Din Down To is 2
+- Dout Width is 1
+
+Connect the `Din` of the `Slice` to the `emio_ttc0` output on the MPSoC. 
+
+It should look like this when you're done:
+
+![BD Step 15](images/bd_step15.png)
+
+Hit `Ctrl+K` (or under the `Design` tab, right-click on the top level and hit `Create Port`). Set the `Port name` as `fan_pwm_en` and set the `Direction` as `Output`.
+
+![BD Step 16](images/bd_step16.png)
+
+Finally, wire the port to the output of the slice.
+
+![BD Step 17](images/bd_step17.png)
+
+Validate the block design again and you can safely ignore the `intr` critical warning as mentioned before. Make sure to also save your block design.
+
+Open up the `Settings` menu. This is in the same menu as the `Create Block Design` mentioend before, but a few items above. Change the `Bitstream` settings so that a `bin` file is generated.
+
+![BD Step 18](images/bd_step18.png)
+
+In the `Flow Navigator` menu, click on `Generate Block Design`. This is just a few items below the `Create Block Design` mentioned at the start. Set the `Synthesis Option` to `Global` and hit `Generate`. Ignore the `intr` warning again.
+
+Then `Create HDL Wrapper` and choose the menu item that says `Let Vivado manage wrapper and auto-update`.
+
+![BD Step 19](images/bd_step19.png)
+
+Skim through the generated `*.v` and `.vhd` files in the `Design Sources` list. Note that `Vivado` supports mixing both VHDL and SystemVerilog/Verilog.
+
+Finally, we need to setup the constraint for the fan. We've created a port in our block design for the fan PWM, but now we need to map that to a physical IO pin on the FPGA.
+
+In the `Flow Navigator`, click `Add sources` and `Add or create constraints`. Click `Create Constraint` and add a file called `fan_pinout.xdc`. 
+
+![BD Step 20](images/bd_step20.png)
+
+In the sources tab, navigate to the added constraint file and paste this in:
+
+``` tcl
+set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
+
+set_property PACKAGE_PIN <X00> [get_ports {fan_pwm_en}]
+set_property IOSTANDARD LVCMOS33 [get_ports {fan_pwm_en}]
+set_property SLEW SLOW [get_ports {fan_pwm_en}]
+set_property DRIVE 4 [get_ports {fan_pwm_en}]
+```
+
+**Please note that the `PACKAGE_PIN` is not set to a real value. This is left as an exercise to the reader.**
+
+Here are some resources:
+- Schematics for the KR260 SOM can be found here: [Schematics](https://www.xilinx.com/member/forms/download/design-license.html?cid=bad0ada6-9a32-427e-a793-c68fed567427&filename=xtp743-kr260-schematic.zip)
+- XML for the FPGA pinout can be found `/afs/ece/support/xilinx/xilinx.release/Vivado-2022.2/Vivado/2022.2/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kr260_som/1.1/part0_pins.xml`
+
+<details>
+    <summary>Answer</summary>
+    Set the PACKAGE_PIN to A12
+
+    From the schematic on page 3, we can see that the Fan PWM is controlled by HDA20.
+
+    HDA20 is connected to C24 on page 6.
+
+    We can see that C24 is mapped to A12 on the SOM from the XML: "./part0_pins.xml:56:            <pin index="39" name ="som240_1_c24"   loc="A12"  pcb_min_delay="0.33601" pcb_max_delay="0.41067"/>"
+</details>
+<br>
+
+Now, can generate a bitstream. Click on `Generate Bitstream` in the `Flow Navigator`. A warning saying no implementation is found should pop up. This is just saying you haven't ran Synthesis and PnR yet. Hit Yes, and run the bitstream generation.
+
+This will take a while! You can monitor the progress by clicking on the `Design Runs` tab in the bottom ribbon. View the implementation when it's done. 
+
+Finally, in the `Flow Navigator` click on `Export Platform`. Select `Hardware and Hardware Emulation` in the `Platform Type`. Make sure to check the `Include Bitstream` option in the `Platform State` window. Give the platform whatever name you'd like in the two tabs, just make note of where the `.xsa` file ends up.
