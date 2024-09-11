@@ -1,6 +1,6 @@
 # KR260 Platform Setup
 
-This guide serves as a starting point for setting up the hardware platform for the KRIA KR260 Robotics Starter Kit
+This guide serves as a starting point for setting up the hardware platform for the Kria KR260 Robotics Starter Kit
 
 ---
 
@@ -215,7 +215,7 @@ Skim through the generated `*.v` and `.vhd` files in the `Design Sources` list. 
 
 Finally, we need to setup the constraint for the fan. We've created a port in our block design for the fan PWM, but now we need to map that to a physical IO pin on the FPGA.
 
-In the `Flow Navigator`, click `Add sources` and `Add or create constraints`. Click `Create Constraint` and add a file called `fan_pinout.xdc`. 
+In the `Flow Navigator`, click `Add sources` and `Add or create constraints`. Click `Create Constraint` and add a file called `fan_pinout.xdc`. Make sure to check `Copy constraint files into project`.
 
 ![BD Step 20](images/bd_step20.png)
 
@@ -253,3 +253,29 @@ Now, can generate a bitstream. Click on `Generate Bitstream` in the `Flow Naviga
 This will take a while! You can monitor the progress by clicking on the `Design Runs` tab in the bottom ribbon. View the implementation when it's done. Disregard the `Critical Warning` regarding the clock source pin.
 
 Finally, in the `Flow Navigator` click on `Export Platform`. Select `Hardware and Hardware Emulation` in the `Platform Type`. Make sure to check the `Include Bitstream` option in the `Platform State` window. Give the platform whatever name you'd like in the two tabs, just make note of where the `.xsa` file ends up.
+
+## Wrap Up
+
+Let's save our project onto our AFS as the `/scratch` directory gets cleared after 28 days. 
+
+In the `File` item in the top ribbon, navigate to `Project -> Write TCL`. 
+
+![Wrap Up](images/wrap_up.png)
+
+Check the relevant options, I would do:
+- Write all properties
+- Copy sources to new project
+- Recreate block design using TCL
+- Write object values
+
+Then save the `.tcl` file to somwhere in your `private` directory. 
+
+In the future, if you'd like to open up this project, run
+
+```console
+user@eceXXX:/scratch$ vivado -source <tcl file> &
+```
+A reference of this platform can be found at 
+```console
+/afs/ece.cmu.edu/class/ece500/fpga/kr260_hw_platform.tcl
+```
