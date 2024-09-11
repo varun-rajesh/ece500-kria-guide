@@ -250,6 +250,6 @@ Here are some resources:
 
 Now, can generate a bitstream. Click on `Generate Bitstream` in the `Flow Navigator`. A warning saying no implementation is found should pop up. This is just saying you haven't ran Synthesis and PnR yet. Hit Yes, and run the bitstream generation.
 
-This will take a while! You can monitor the progress by clicking on the `Design Runs` tab in the bottom ribbon. View the implementation when it's done. 
+This will take a while! You can monitor the progress by clicking on the `Design Runs` tab in the bottom ribbon. View the implementation when it's done. Disregard the `Critical Warning` regarding the clock source pin.
 
 Finally, in the `Flow Navigator` click on `Export Platform`. Select `Hardware and Hardware Emulation` in the `Platform Type`. Make sure to check the `Include Bitstream` option in the `Platform State` window. Give the platform whatever name you'd like in the two tabs, just make note of where the `.xsa` file ends up.
