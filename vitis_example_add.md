@@ -1,0 +1,1 @@
+This guide will walk you through how to setup a sample Vitis project 
