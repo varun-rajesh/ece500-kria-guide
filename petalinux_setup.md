@@ -1,3 +1,5 @@
+# KR260 PetaLinux Setup
+
 This guide will walk you through updating the firmware of your Kria KR260 board and how to create a PetaLinux image on which you can run programs.
 
 ---
