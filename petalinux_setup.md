@@ -48,13 +48,6 @@ You'll need a MicroSD card (minimum of 16GB) to flash Linux images to for the KR
 
 Head over to [Kria SOM Boot Firmware Update](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/3020685316/Kria+SOM+Boot+Firmware+Update) and download the K26 Boot FW 1.02.
 
-<!---
-#### (Optional) Vitis-AI DPU Setup
-
-Head over to the [Vitis-AI Github](https://github.com/Xilinx/Vitis-AI/tree/3.0/dpu). In the README, find the download link for `DPUCZDX8G` and grab the reference design. 
-
-SCP this over to your scratch workspace, and untar it. 
---->
 ## Firmware Update
 
 I've only done these steps with a Windows computer, YMMV on MacOS. 
@@ -229,14 +222,6 @@ Exit out of the config menu. You can do this by hitting \<Esc\> \<Esc\> in the t
 
 Now attempt to build the image with
 ```console
-user@eceXXX:/scratch/<workspace>/kr260_petalinux_os$ petalinux-build
-```
-<!---
-(Optional) Enable DPU kernel package for Vitis-AI
-```console
-user@eceXXX:/scratch/<workspace>/kr260_petalinux_os$ petalinux-config -c kernel
---->
-Device Drivers ---> Misc devices ---> Xilinx Deep learning Processing Unit (DPU) Driver [*]
 user@eceXXX:/scratch/<workspace>/kr260_petalinux_os$ petalinux-build
 ```
 
