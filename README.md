@@ -14,3 +14,9 @@ Vitis-AI
   - Platform Setup: Work in Progress (https://github.com/varun-rajesh/ece500-kria-guide/blob/dpu/kr260_dpu_platform_setup.md)
   - PetaLinux Setup: Work in Progress (https://github.com/varun-rajesh/ece500-kria-guide/blob/dpu/kr260_dpu_platform_setup.md)
   - Model Compile and Deployment: Work in progress (https://github.com/varun-rajesh/ece500-kria-guide/blob/dpu/resnet18_pt.md)
+
+Initial rough guide can be found here: https://github.com/varun-rajesh/ece500-kria-guide/tree/dpu
+- Vitis-AI on KR260: Work in Progress :(
+  - Platform Setup: Work in Progress :(
+  - PetaLinux Setup: Work in Progress :(
+  - Model Compile and Deployment: https://xilinx.github.io/Vitis-AI/3.0/html/docs/quickstart/mpsoc.html
