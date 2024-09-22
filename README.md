@@ -10,7 +10,7 @@ RTL Kernel
 
 Vitis-AI
 - Vitis-AI on KV260: https://xilinx.github.io/Vitis-AI/3.0/html/docs/quickstart/mpsoc.html
-- Vitis-AI on KR260: If you're brave, this is still very unfinished.
+- Vitis-AI on KR260: For the brave
   - Platform Setup: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/kr260_dpu_platform_setup.md
   - PetaLinux Setup: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/dpu_petalinux_setup.md
   - Model Compile and Deployment: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/dpu_petalinux_setup.md
