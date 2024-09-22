@@ -1,4 +1,4 @@
-I'm not writing a full guide for this, but leaning heavily on pre-published guides on Vitis-AI
+I'm not writing a full guide for this, but leaning heavily on pre-published guides on Vitis-AI.
 
 https://xilinx.github.io/Vitis-AI/3.0/html/docs/quickstart/mpsoc.html
 
@@ -34,9 +34,9 @@ where the fingerprint field has the fingerprint you saw when you ran `sudo show_
 
 Another change is that a lot of the scp commands have you running them with `root@<ip address>` but this is no longer supported. So just use `petalinux@<ip address>` as before.
 
-The image inferencing test should just work out of the box. One thing that was not entirely clear is that you need to run `sudo startx` and then `sudo ./test_video_classification .......` for the USB camera. 
+The image inferencing test should just work out of the box. One thing that was not entirely clear is that you need to run `sudo startx` and then `sudo ./test_video_classification <usb device> -t <threads>` for the USB camera. 
 
-Here is me and a toilet plunger:
-![alt text](image-19.png)
+Here is me and a toilet plunger with resnet18
+![Working Resnet](images/toilet.png)
 
 Another just general piece of advice, just run everything with sudo. It'll save you some headeache if some commands aren't working.

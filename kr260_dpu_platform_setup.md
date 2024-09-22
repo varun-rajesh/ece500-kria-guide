@@ -10,7 +10,6 @@ step 3
 
 We need to add the IP for the DPU. Launch the settings, go to IP, then Repository.
 
-![alt text](image.png)
 
 step 4
 
@@ -133,7 +132,7 @@ To close it all out, go ahead and export a wrapper for the block design. Export 
 
 Feel free to make any changes as you see fit. For example changing the architecture of the DPU and the number of DPUs.
 
-![alt text](image-18.png)
+![alt text](images/floorplan.png)
 
 My suspicion is there isn't much more space on the FPGA to increase the DPU count or the architecture, but feel free to play around with this for your needs. The 2x DPU/B512 architecture is just for demonstration.
 
