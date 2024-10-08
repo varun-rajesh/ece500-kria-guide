@@ -13,4 +13,4 @@ Vitis-AI
 - Vitis-AI on KR260: For the brave
   - Platform Setup: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/kr260_dpu_platform_setup.md
   - PetaLinux Setup: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/dpu_petalinux_setup.md
-  - Model Compile and Deployment: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/dpu_petalinux_setup.md
+  - Model Compile and Deployment: https://github.com/varun-rajesh/ece500-kria-guide/blob/main/resnet18_pt.md
