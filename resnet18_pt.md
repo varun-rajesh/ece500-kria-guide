@@ -16,7 +16,7 @@ When you get to the Quantizing the Model section, and it has you run
 python resnet18_quant.py --quant_mode float --inspect --target DPUCZDX8G_ISA1_B4096 --model_dir model
 ```
 
-Replace the thing after --target with what you noted down from when you booted up the FPGA. For example `DPUCZDX8G_ISA2_B512`
+Replace the thing after --target with what you noted down from when you ran `sudo show_dpu`. For example `DPUCZDX8G_ISA2_B512`
 
 When you get to the `Compile the model` step, and it has you run
 
