@@ -6,7 +6,7 @@ Here is what I would do:
 
 Do the `Prerequisites` section
 
-Do the `Quickstart` section but ignoring the steps for setting up the target. Just do what you've been doing with setting up the IP and stuff.
+Do the `Quickstart` section. When you clone the Vitis-AI repo, make sure to checkout the `3.0` branch. You can also ignore the steps for setting up the target. Just do what you've been doing with setting up the IP and stuff.
 
 Do the `PyTorch Tutorial` section with these modifications:
 
